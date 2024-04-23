@@ -1,4 +1,4 @@
-# todo-List
+# TaskIt Application
 Tech Stack :
 - NodeJS
 - ExpressJS
