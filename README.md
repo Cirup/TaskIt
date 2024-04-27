@@ -2,6 +2,7 @@
 Tech Stack :
 - NodeJS
 - ExpressJS
+- EJS
 - TailWind or BootStrap
 - MongoDB / Mongoose
 

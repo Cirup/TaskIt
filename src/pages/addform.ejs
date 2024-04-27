@@ -1,0 +1,26 @@
+<div class="flex-column add-task-container px-5 py-4">
+    <h2>Add Task</h2>
+    <form method="POST" action="">
+        <div class="row gx-2 mb-2">
+            <div class="col-5">
+                <input type="text" class="form-control py-2 px-2" id="taskName" placeholder="Task Name">
+            </div>
+            <div class="col">
+                <input type="date" class="py-2 px-2" name="dueDate" id="dueDate">
+            </div>
+            <select class="col form-select py-2 px-2" aria-label="Default select example">
+                    <option selected>Priority</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+            </select>
+        </div>
+        <div class="row gx-2">
+            <div class="col-9 form-floating task-desc">
+                <textarea class="form-control" placeholder="add description" id="task-desc"></textarea>
+                <label for="task-desc">Description</label>
+              </div>
+            <button class=" col-3 btn btn-primary" type="button">Submit</button>
+        </div>
+    </form>
+</div>

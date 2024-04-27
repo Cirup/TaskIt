@@ -1,0 +1,20 @@
+{
+  "name": "taskit",
+  "version": "1.0.0",
+  "description": "Tech Stack :\r - NodeJS\r - ExpressJS\r - TailWind or BootStrap\r - MongoDB / Mongoose",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "R.M. Sarmiento",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.2",
+    "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.2"
+  }
+}

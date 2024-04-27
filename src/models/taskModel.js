@@ -1,0 +1,29 @@
+import mongoose from "mongoose";
+
+const taskModel = new mongoose.Schema({
+    
+    task: {
+        type: String,
+        required: true
+    },
+    dueDate: {
+        type: Date,
+    },
+    status: {
+        type: String,
+        enum: ["Incomplete", "Complete"],
+        default: "Incomplete"
+    },
+    priorityLevel: {
+        type: String,
+        enum: ["High", "Medium", "Low"],
+    },
+    desc: {
+        type: String
+    }
+
+})
+
+const Task = mongoose.model('Task', taskModel)
+
+export default Task;
