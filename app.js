@@ -20,7 +20,7 @@ import Task from './src/models/taskModel.js'
 
 async function startServer() {
     app.set('view engine', 'ejs');          // embedded javascript (EJS) as view engine
-    app.set('views', './src/pages');     // directory for the views folder
+    app.set('views', './src/pages');        // directory for the views folder
     app.use(express.static('public'));      // looks at 'public' folder for static files
     app.use(express.json());                // parse request body as json
     app.use(router);                        // assign routes

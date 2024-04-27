@@ -14,7 +14,7 @@ const taskModel = new mongoose.Schema({
         enum: ["Incomplete", "Complete"],
         default: "Incomplete"
     },
-    priorityLevel: {
+    prioritylevel: {
         type: String,
         enum: ["High", "Medium", "Low"],
     },
