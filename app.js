@@ -25,7 +25,7 @@ async function startServer() {
     app.use(express.json());                // parse request body as json
     app.use(router);                        // assign routes
 
-    // connect to db
+    // Connect to the database
     mongoose.connect(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => {
         console.log("MongoDB connected");
@@ -33,6 +33,11 @@ async function startServer() {
         console.log(err);
     });
 
+    // Session Setup
+    
+
+
+    // Start Server
     app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });

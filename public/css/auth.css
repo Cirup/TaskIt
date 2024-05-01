@@ -1,0 +1,66 @@
+*{
+    font-family: 'Poppins';
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+}
+
+body{
+    background-color: #1A1B1E;
+}
+
+.body-container{
+    height: 100vh;
+}
+
+.container{
+    height: 430px;
+    width: 580px;
+    background: linear-gradient(180deg, #1A1B1E, #2E3033);
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.25);
+    border-radius: 42px;
+    -webkit-border-radius: 42px;
+    -moz-border-radius: 42px;
+    -ms-border-radius: 42px;
+    -o-border-radius: 42px;
+}
+
+.logo-box{
+    height: 80px;
+    /* background-color: rgba(46, 48, 51, 0.70);
+    border-width: 1px;
+    border-style: solid;
+    border-image: linear-gradient(180deg,#7A7A7A, #8A3EC0) 10;
+    */
+} 
+
+.logintag, .registertag{
+    font-size: 15px;
+    color: #fff;
+}
+
+input[type="text"], input[type="password"]{
+    background-color: rgba(255, 255, 255, 0);
+    color: #fff;
+    font-size: 13px;
+    height: 40px;
+}
+
+input[type="text"]::placeholder, input[type="password"]::placeholder{
+    color: #7A7A7A;
+    font-size: 13px;
+}
+
+.btn{
+    font-size: 14px;
+    color: #fff;
+}
+
+.form{
+    padding: 0 100px;
+}
+
+span{
+    color: #d2d2d2;
+    font-size: 12px;
+}

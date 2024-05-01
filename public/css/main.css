@@ -43,6 +43,7 @@ body{
 
 input[type="text"], input[type="text"]:active{
     background-color: #2E3033;
+    color: #ABAFB1;
 }
 .form-control::placeholder{
     color: #ABAFB1;
@@ -80,21 +81,11 @@ h2{
     -o-border-radius: 30px;
 }
 
-.status-circle{
-    height: 60px;
-    width: 60px;
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
-    background-color: #fff;
-}
 
 .task-title{
     font-size: 18px;
     font-weight: 600;
-    color: #fff;
+    color: #d294ee;
 }
 
 .dueDate{
@@ -102,10 +93,27 @@ h2{
     color: #fff;
 }
 
+.icons{
+    height: 60px;
+    width: 60px;
+    background-color: #ffffff00;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+
+.icons:hover{
+    background-color: #e2e2e233;
+    cursor: pointer;
+}
+
+
 
 /* PRIORITY */
 
-.high-priority{
+.High-priority{
     font-weight: 600;
     background-color: #FFE0E0;
     border-radius: 5px;
@@ -119,7 +127,7 @@ h2{
     color: #BD002A;
 }
 
-.medium-priority{
+.Medium-priority{
     display: inline-block;
     font-weight: 600;
     background-color: #FDE5C0;
@@ -134,7 +142,7 @@ h2{
     color: #B12D00;
 }
 
-.low-priority{
+.Low-priority{
     display: inline-block;
     font-weight: 600;
     background-color: #CDF3C6;

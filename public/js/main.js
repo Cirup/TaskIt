@@ -31,6 +31,41 @@ form.addEventListener('submit', async (e) => {
 });
 
 // Delete Task
+const deleteBtn = document.querySelectorAll('.delete-btn');
+
+deleteBtn.forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+        let taskId = e.target.id;
+        console.log(taskId);
+        const response = await fetch(`/deleteTask/${taskId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            console.log('Task Deleted');
+        } else {
+            console.log('Task Not Deleted');
+        }
+    });
+});
 
 // Update Task
+
+const editBtn = document.querySelectorAll('.edit-btn');
+
+editBtn.forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+        let taskId = e.target.id;
+        console.log(taskId);
+        const response = await fetch(`/updateTask/${taskId}`, {
+            method: 'PATCH'
+        });
+
+        if (response.ok) {
+            console.log('Task Updated');
+        } else {
+            console.log('Task Not Updated');
+        }
+    });
+});
 

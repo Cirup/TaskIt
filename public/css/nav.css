@@ -1,3 +1,17 @@
 nav img{
     width: 100px;
 }
+
+#username{
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.icon-display{
+    cursor: pointer;
+}
+
+i{
+    color: #fff;
+}
