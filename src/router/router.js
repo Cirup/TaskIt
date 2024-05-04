@@ -18,6 +18,23 @@ router.get('/', async (req, res) => {
     res.render("../pages/main.ejs", {data: task, displayDate: dateFormat});
 });
 
+router.get('/getTask/:id', async (req, res) => {
+
+    try{
+        const id = req.params.id;
+        const task = await Task.findById(id);
+
+        if(task){
+            console.log(task);
+            res.json(task);
+        } else {
+            console.log("Task not found");
+        }
+    } catch(err){
+        console.log(err);
+    }
+});
+
 router.post('/addTask', async (req, res) => {
     const data = req.body;
     const taskData = new Task({
@@ -54,7 +71,19 @@ router.delete('/deleteTask/:id',async (req, res) => {
     }
 });
 
-router.patch('/updateTask', (req, res) => {
+router.patch('/updateTask/:id', async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+
+    const result = await Task.findByIdAndUpdate(id, data);
+
+    if(result){
+        console.log(`Task ${result.task} Updated`);
+        console.log(result)
+    } else {
+        console.log("Task not updated");
+    
+    }
 
 });
 
