@@ -1,4 +1,4 @@
-
+import passport from 'passport';
 import express from 'express';
 const router = express.Router();
 
@@ -6,68 +6,148 @@ const router = express.Router();
 import Task from '../models/taskModel.js';
 import User from '../models/userModel.js';
 
-router.get('/', async (req, res) => {
-    const task = await Task.find();
 
-    const dateFormat = task.map((item) => {
-        const date = new Date(item.dueDate);
-        const formattedDate = date.toLocaleDateString();
-        return formattedDate;
-    });
-
-    res.render("../pages/main.ejs", {data: task, displayDate: dateFormat});
+// Authetication Routes
+router.get('/login', (req, res) => {
+    res.render("login.ejs");
 });
+
+
+router.post('/login', passport.authenticate('local', { successRedirect: '/user/auth', failureRedirect: '/register' }));
+
+// router.post('/login', (req, res, next) => {
+//     const data = req.body;
+//     console.log('Incoming Request:', data); // Log the request body
+// });
+
+// Test if there is user authenticated
+router.get('/user/auth', (req, res) => {
+    console.log(req.user);
+    console.log(req.session)
+    return req.user ? res.status(200).send(req.user) : res.status(401).send({ response: 'User Not Authenticated' });
+});
+
+router.get('/logout', (req, res) => {
+    res.render("../pages/main.ejs");
+});
+
+router.get('/register', (req, res) => {
+    try {
+        res.render("../pages/register.ejs");
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.post('/register', (req, res) => {
+
+    try {
+        const data = req.body;
+        const userData = new User({
+            username: data.username,
+            password: data.password
+        });
+
+        const result = userData.save();
+
+        if (!result) {
+            console.log("User not registered");
+            res.status(501).send({ response: 'Error Registering User' });
+        } else {
+            console.log("User registered");
+            res.status(200).send({ response: 'User Registered' });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+router.get('/', async (req, res) => {
+
+    try {
+        if (req.isAuthenticated()) {
+
+            const task = await Task.find();
+
+            const dateFormat = task.map((item) => {
+                const date = new Date(item.dueDate);
+                const formattedDate = date.toLocaleDateString();
+                return formattedDate;
+            });
+
+            res.render("../pages/main", { data: task, displayDate: dateFormat, datalength: task.length });
+        } else {
+            console.log("No user found");
+            res.status(404).send("User not found");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 
 router.get('/getTask/:id', async (req, res) => {
 
-    try{
+    try {
         const id = req.params.id;
         const task = await Task.findById(id);
 
-        if(task){
+        if (task) {
             console.log(task);
             res.json(task);
         } else {
             console.log("Task not found");
         }
-    } catch(err){
+    } catch (err) {
         console.log(err);
     }
 });
 
 router.post('/addTask', async (req, res) => {
-    const data = req.body;
-    const taskData = new Task({
-        task: data.task,
-        dueDate: data.dueDate,
-        status: data.status,
-        prioritylevel: data.prioritylevel,
-        desc: data.desc
-    });
+    if (req.isAuthenticated()) {
+        try {
+            const data = req.body;
+            const taskData = new Task({
+                task: data.task,
+                dueDate: data.dueDate,
+                status: data.status,
+                prioritylevel: data.prioritylevel,
+                desc: data.desc
+            });
 
-    let formattedDate = new Date(data.dueDate);
-    formattedDate = formattedDate.toLocaleDateString();
-    taskData.dueDate = formattedDate;
+            let formattedDate = new Date(data.dueDate);
+            formattedDate = formattedDate.toLocaleDateString();
+            taskData.dueDate = formattedDate;
 
-    const result = await taskData.save();
-    
-    if(!result){
-        console.log("Task not added");
-    } else {
-        console.log("Task added");
-        console.log(result)
+            const result = await taskData.save();
+
+            if (!result) {
+                console.log("Task not added");
+            } else {
+                console.log("Task added");
+                res.status(200).send({ response: 'Task Added' });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    else {
+        console.log("User not authenticated");
     }
 });
 
-router.delete('/deleteTask/:id',async (req, res) => {
+router.delete('/deleteTask/:id', async (req, res) => {
     const id = req.params.id;
-    
+
     const result = await Task.findByIdAndDelete(id);
 
-    if(result){
+    if (result) {
         console.log(`Task ${result.task} Deleted`);
+        res.status(200).send({ response: 'Task Deleted' });
     } else {
         console.log("Task not deleted");
+        res.status(501).send({ response: 'Error Deleting' });
     }
 });
 
@@ -75,46 +155,18 @@ router.patch('/updateTask/:id', async (req, res) => {
     const id = req.params.id;
     const data = req.body;
 
-    const result = await Task.findByIdAndUpdate(id, data);
+    const result = await Task.findOneAndUpdate({ _id: id }, data); // or can use findByIdAndUpdate
 
-    if(result){
+    if (result) {
         console.log(`Task ${result.task} Updated`);
         console.log(result)
+        res.status(200).send({ response: 'Task Updated' })
     } else {
         console.log("Task not updated");
-    
+        res.status(501).send({ response: 'Error Updating' })
     }
 
 });
 
-// Authetication Routes
-router.get('/login', (req, res) => {
-    res.render("../pages/login.ejs");
-});
-
-router.get('/register', (req, res) => {
-    res.render("../pages/register.ejs");
-});
-
-router.get('/logout', (req, res) => {
-    res.render("../pages/main.ejs");
-});
-
-router.post('/register', (req, res) => {
-    const data = req.body;
-    const userData = new User({
-        username: data.username,
-        password: data.password
-    });
-
-    const result = userData.save();
-    
-    if(!result){
-        console.log("User not registered");
-    } else {
-        console.log("User registered");
-        console.log(result)
-    }
-});
 
 export default router;

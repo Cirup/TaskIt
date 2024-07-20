@@ -6,9 +6,9 @@ import User from './src/models/userModel.js'
 import dotenv from 'dotenv';
 dotenv.config()
 
-const mongoURI = process.env.MONGODB_URI;  
-    // connect to db
-    mongoose.connect(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true})
+const mongoURI = process.env.MONGODB_URI;
+// connect to db
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("MongoDB connected");
     }).catch((err) => {

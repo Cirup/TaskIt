@@ -1,6 +1,9 @@
 
-// Add Task
+const deleteBtn = document.querySelectorAll('.delete-btn');
 const form = document.querySelector('#task-form');
+const editBtn = document.querySelectorAll('.edit-btn');
+
+// Add Task
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formInputData = new FormData(form);
@@ -20,19 +23,16 @@ form.addEventListener('submit', async (e) => {
         body: JSON.stringify(data)
     });
 
-    if (response.ok) {
+    if (response.status === 200) {
         console.log('Task Added');
-    } else {    
+        location.reload();
+    } else {
         console.log('Task Not Added');
     }
-    
-    console.log(data);
 
 });
 
 // Delete Task
-const deleteBtn = document.querySelectorAll('.delete-btn');
-
 deleteBtn.forEach((btn) => {
     btn.addEventListener('click', async (e) => {
         let taskId = e.target.id;
@@ -41,8 +41,9 @@ deleteBtn.forEach((btn) => {
             method: 'DELETE'
         });
 
-        if (response.ok) {
+        if (response.status === 200) {
             console.log('Task Deleted');
+            location.reload();
         } else {
             console.log('Task Not Deleted');
         }
@@ -50,17 +51,11 @@ deleteBtn.forEach((btn) => {
 });
 
 // Update Task
-
 function formatDate(month, day, year) {
     const formattedMonth = month <= 9 ? '0' + month : month;
     const formattedDay = day <= 9 ? '0' + day : day;
-
     return `${year}-${formattedMonth}-${formattedDay}`;
 }
-
-const editBtn = document.querySelectorAll('.edit-btn');
-const taskName = document.querySelector('.task-title');
-
 
 editBtn.forEach((btn) => {
     btn.addEventListener('click', async (e) => {
@@ -78,8 +73,8 @@ editBtn.forEach((btn) => {
         // Format date as yyyy-mm-dd
         const formattedDate = formatDate(month, day, year);
 
-        const form = 
-        `
+        const form =
+            `
         <form class="container" id="update-task-form-${taskData._id}">
             <div class="row gx-3 mb-2">
                 <div class="col">
@@ -113,6 +108,11 @@ editBtn.forEach((btn) => {
         containertask.innerHTML = form;
 
         const updateForm = document.querySelector(`#update-task-form-${taskData._id}`);
+        const exitBtn = document.querySelector('.exit-update-btn');
+
+        exitBtn.addEventListener('click', () => {
+            location.reload();
+        });
 
         updateForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -131,13 +131,14 @@ editBtn.forEach((btn) => {
                 },
                 body: JSON.stringify(data)
             });
-            
-            if (response.ok) {
+
+            if (response.status === 200) {
                 console.log('Task Added');
-            } else {    
+                location.reload();
+            } else {
                 console.log('Task Not Added');
             }
-            
+
             console.log(data);
         });
     });

@@ -2,17 +2,18 @@ import mongoose from "mongoose";
 
 const userModel = new mongoose.Schema({
     username: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         required: true,
         unique: true
     },
     password: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         required: true,
     },
-    task: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref:"Task" }],
+    task: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Task"
+    }],
 })
 
 const User = mongoose.model("User", userModel);

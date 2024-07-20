@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,73 +8,118 @@
 
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- BootstrapCS and JS -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="/css/main.min.css">
-   
+
     <!-- CSS Links and JS Script -->
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/nav.css">
     <script defer src="/js/main.js"></script>
     <script defer src="/js/nav.js"></script>
-    
+
     <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
 
     <div class="container-lg">
         <%- include("./nav.ejs") %>
-        <main>
-            <%- include("./addform.ejs") %>
-            <div class="d-flex mt-5 mb-3">
-                <h2 class="me-5">Task Todo</h2>
-                <h2>Task Completed</h2>
-            </div>
+            <main>
+                <%- include("./addform.ejs") %>
+                    <div class="d-flex mt-5 mb-3">
+                        <h2 class="me-5" tab>Task Todo</h2>
+                        <h2 class="tab">Task Completed</h2>
+                    </div>
 
-            <section id="todo-task-list">
-                <% for(var i=0; i< data.length; i++) { %>
-                <div class="task-container d-flex justify-content-between align-items-center px-4 py-4 mb-3">
-                    <div class="d-flex flex-column justify-content-center">
-                        <h2 class="task-title"><%= data[i].task %></h2>
-                        <p class="dueDate mb-0">Deadline: <%= displayDate[i] %></p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center">
-                        <span class="<%= data[i].prioritylevel %>-priority px-2 me-3"><%= data[i].prioritylevel %> Priority</span>
-                        <div id="<%= data[i]._id %>" class="icons incomplete-task d-flex justify-content-center align-items-center ">
-                            <svg id="<%= data[i]._id %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#ffffff" fill="none">
-                                <path d="M22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12Z" stroke="currentColor" stroke-width="1.5" />
-                                <path d="M8 12.5L10.5 15L16 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
+                    <section id="todo-task-list">
+                        <% for(var i=0; i< datalength; i++) { %>
+                            <div
+                                class="task-container d-flex justify-content-between align-items-center px-4 py-4 mb-3">
+                                <div class="d-flex flex-column justify-content-center">
+                                    <h2 class="task-title">
+                                        <%= data[i].task %>
+                                    </h2>
+                                    <p class="dueDate mb-0">Deadline: <%= displayDate[i] %>
+                                    </p>
+                                </div>
+                                <div class="d-flex flex-row align-items-center">
+                                    <span class="<%= data[i].prioritylevel %>-priority px-2 me-3">
+                                        <%= data[i].prioritylevel %> Priority
+                                    </span>
+                                    <div id="<%= data[i]._id %>"
+                                        class="icons incomplete-task d-flex justify-content-center align-items-center ">
+                                        <svg id="<%= data[i]._id %>" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24" width="28" height="28" color="#ffffff" fill="none">
+                                            <path
+                                                d="M22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12Z"
+                                                stroke="currentColor" stroke-width="1.5" />
+                                            <path d="M8 12.5L10.5 15L16 9" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </div>
+                                    <!-- Edit Icon -->
+                                    <div id="<%= data[i]._id %>"
+                                        class="icons edit-btn d-flex justify-content-center align-items-center mx-2">
+                                        <svg id="<%= data[i]._id %>" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24" width="20" height="20" color="#ffffff" fill="none">
+                                            <path
+                                                d="M14.0737 3.88545C14.8189 3.07808 15.1915 2.6744 15.5874 2.43893C16.5427 1.87076 17.7191 1.85309 18.6904 2.39232C19.0929 2.6158 19.4769 3.00812 20.245 3.79276C21.0131 4.5774 21.3972 4.96972 21.6159 5.38093C22.1438 6.37312 22.1265 7.57479 21.5703 8.5507C21.3398 8.95516 20.9446 9.33578 20.1543 10.097L10.7506 19.1543C9.25288 20.5969 8.504 21.3182 7.56806 21.6837C6.63212 22.0493 5.6032 22.0224 3.54536 21.9686L3.26538 21.9613C2.63891 21.9449 2.32567 21.9367 2.14359 21.73C1.9615 21.5234 1.98636 21.2043 2.03608 20.5662L2.06308 20.2197C2.20301 18.4235 2.27297 17.5255 2.62371 16.7182C2.97444 15.9109 3.57944 15.2555 4.78943 13.9445L14.0737 3.88545Z"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                                            <path d="M13 4L20 11" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linejoin="round" />
+                                            <path d="M14 22L22 22" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </div>
+                                    <!-- Delete Icon -->
+                                    <div id="<%= data[i]._id  %>"
+                                        class="icons delete-btn d-flex justify-content-center align-items-center">
+                                        <svg id="<%= data[i]._id %>" class="" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24" width="20" height="20" color="#ffffff" fill="none">
+                                            <path
+                                                d="M19.5 5.5L18.8803 15.5251C18.7219 18.0864 18.6428 19.3671 18.0008 20.2879C17.6833 20.7431 17.2747 21.1273 16.8007 21.416C15.8421 22 14.559 22 11.9927 22C9.42312 22 8.1383 22 7.17905 21.4149C6.7048 21.1257 6.296 20.7408 5.97868 20.2848C5.33688 19.3626 5.25945 18.0801 5.10461 15.5152L4.5 5.5"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                            <path
+                                                d="M3 5.5H21M16.0557 5.5L15.3731 4.09173C14.9196 3.15626 14.6928 2.68852 14.3017 2.39681C14.215 2.3321 14.1231 2.27454 14.027 2.2247C13.5939 2 13.0741 2 12.0345 2C10.9688 2 10.436 2 9.99568 2.23412C9.8981 2.28601 9.80498 2.3459 9.71729 2.41317C9.32164 2.7167 9.10063 3.20155 8.65861 4.17126L8.05292 5.5"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }%>
+                    </section>
+
+                    <section class="task-completed-container">
+                        <div class="task-container d-flex justify-content-between align-items-center px-4 py-4 mb-3">
+                            <div class="d-flex flex-column justify-content-center">
+                                <h2 class="task-title">
+                                    Title
+                                </h2>
+                            </div>
+                            <div class="d-flex flex-row align-items-center">
+                                <span class="status-complete px-2 me-3">
+                                    Completed
+                                </span>
+                            </div>
                         </div>
-                        <!-- Edit Icon -->
-                        <div id="<%= data[i]._id %>" class="icons edit-btn d-flex justify-content-center align-items-center mx-2">
-                            <svg id="<%= data[i]._id %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#ffffff" fill="none">
-                                <path d="M14.0737 3.88545C14.8189 3.07808 15.1915 2.6744 15.5874 2.43893C16.5427 1.87076 17.7191 1.85309 18.6904 2.39232C19.0929 2.6158 19.4769 3.00812 20.245 3.79276C21.0131 4.5774 21.3972 4.96972 21.6159 5.38093C22.1438 6.37312 22.1265 7.57479 21.5703 8.5507C21.3398 8.95516 20.9446 9.33578 20.1543 10.097L10.7506 19.1543C9.25288 20.5969 8.504 21.3182 7.56806 21.6837C6.63212 22.0493 5.6032 22.0224 3.54536 21.9686L3.26538 21.9613C2.63891 21.9449 2.32567 21.9367 2.14359 21.73C1.9615 21.5234 1.98636 21.2043 2.03608 20.5662L2.06308 20.2197C2.20301 18.4235 2.27297 17.5255 2.62371 16.7182C2.97444 15.9109 3.57944 15.2555 4.78943 13.9445L14.0737 3.88545Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
-                                <path d="M13 4L20 11" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
-                                <path d="M14 22L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </div>
-                        <!-- Delete Icon -->
-                        <div id="<%= data[i]._id  %>"class="icons delete-btn d-flex justify-content-center align-items-center">
-                            <svg id="<%= data[i]._id %>" class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#ffffff" fill="none">
-                                <path d="M19.5 5.5L18.8803 15.5251C18.7219 18.0864 18.6428 19.3671 18.0008 20.2879C17.6833 20.7431 17.2747 21.1273 16.8007 21.416C15.8421 22 14.559 22 11.9927 22C9.42312 22 8.1383 22 7.17905 21.4149C6.7048 21.1257 6.296 20.7408 5.97868 20.2848C5.33688 19.3626 5.25945 18.0801 5.10461 15.5152L4.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                                <path d="M3 5.5H21M16.0557 5.5L15.3731 4.09173C14.9196 3.15626 14.6928 2.68852 14.3017 2.39681C14.215 2.3321 14.1231 2.27454 14.027 2.2247C13.5939 2 13.0741 2 12.0345 2C10.9688 2 10.436 2 9.99568 2.23412C9.8981 2.28601 9.80498 2.3459 9.71729 2.41317C9.32164 2.7167 9.10063 3.20155 8.65861 4.17126L8.05292 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                            </svg>
-                         </div>
-                        </div>
-                    </div>
-                    <% }%>
-                </div>
-                
-            </section>
-        </main>
+                    </section>
+            </main>
     </div>
+
+
     <!-- BootStrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 
 </html>

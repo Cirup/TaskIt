@@ -5,6 +5,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
+    "start": "nodemon app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "R.M. Sarmiento",
@@ -13,10 +14,13 @@
     "@fortawesome/fontawesome-free": "^6.5.2",
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
+    "connect-mongodb-session": "^5.0.0",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
-    "mongoose": "^8.3.2"
+    "mongoose": "^8.3.2",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
   }
 }
