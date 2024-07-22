@@ -3,7 +3,8 @@ Tech Stack :
 - NodeJS
 - ExpressJS
 - EJS
-- TailWind or BootStrap
+- Passport Local Authentication
+- BootStrap
 - MongoDB / Mongoose
 
 ChatGPT Client Simulation - requesting for a Task List Web App
