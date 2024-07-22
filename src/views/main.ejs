@@ -36,13 +36,14 @@
         <%- include("./nav.ejs") %>
             <main>
                 <%- include("./addform.ejs") %>
-                    <div class="d-flex mt-5 mb-3">
-                        <h2 class="me-5" tab>Task Todo</h2>
-                        <h2 class="tab">Task Completed</h2>
+                    <div class="d-flex mt-5 mb-4">
+                        <h2 class="active p-3 me-1" id="task-todo">Task Todo</h2>
+                        <h2 class="p-3" id="task-completed">Task Completed</h2>
                     </div>
 
-                    <section id="todo-task-list">
-                        <% for(var i=0; i< datalength; i++) { %>
+                    <section id="todo-task-list" class="show">
+                        <% for(var i=0; i< datalength; i++) { if(data[i].status==="Incomplete" ) { %>
+
                             <div
                                 class="task-container d-flex justify-content-between align-items-center px-4 py-4 mb-3">
                                 <div class="d-flex flex-column justify-content-center">
@@ -57,7 +58,7 @@
                                         <%= data[i].prioritylevel %> Priority
                                     </span>
                                     <div id="<%= data[i]._id %>"
-                                        class="icons incomplete-task d-flex justify-content-center align-items-center ">
+                                        class="icons add-complete-btn d-flex justify-content-center align-items-center ">
                                         <svg id="<%= data[i]._id %>" xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 24 24" width="28" height="28" color="#ffffff" fill="none">
                                             <path
@@ -96,22 +97,35 @@
                                     </div>
                                 </div>
                             </div>
-                            <% }%>
+                            <% }}%>
                     </section>
 
-                    <section class="task-completed-container">
-                        <div class="task-container d-flex justify-content-between align-items-center px-4 py-4 mb-3">
-                            <div class="d-flex flex-column justify-content-center">
-                                <h2 class="task-title">
-                                    Title
-                                </h2>
+                    <section id="task-completed-list" class="hide">
+                        <% for(var i=0; i< datalength; i++) { if(data[i].status==="Complete" ){%>
+                            <div
+                                class="task-container d-flex justify-content-between align-items-center px-4 py-4 mb-3">
+                                <div class="d-flex flex-column justify-content-center">
+                                    <h2 class="task-title">
+                                        <%= data[i].task %>
+                                    </h2>
+                                </div>
+                                <div class="d-flex flex-row align-items-center">
+                                    <span class="status-complete px-2 me-3">
+                                        Completed
+                                    </span>
+                                    <div id="<%= data[i]._id %>"
+                                        class="icons remove-complete-btn d-flex justify-content-center align-items-center ">
+                                        <svg id="<%= data[i]._id %>" xmlns="http://www.w3.org/2000/svg" height="24"
+                                            width="24"
+                                            viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                            <path fill="#ffffff"
+                                                d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z" />
+                                        </svg>
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="d-flex flex-row align-items-center">
-                                <span class="status-complete px-2 me-3">
-                                    Completed
-                                </span>
-                            </div>
-                        </div>
+                            <% }} %>
                     </section>
             </main>
     </div>

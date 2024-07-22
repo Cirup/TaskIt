@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
 const taskModel = new mongoose.Schema({
-
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     task: {
         type: String,
         required: true
@@ -21,10 +24,6 @@ const taskModel = new mongoose.Schema({
     desc: {
         type: String
     },
-    author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }
 })
 
 const Task = mongoose.model('Task', taskModel)

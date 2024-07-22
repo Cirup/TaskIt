@@ -5,7 +5,8 @@ import mongoose from "mongoose";
 import session from 'express-session';
 import connectMongoDBSession from 'connect-mongodb-session';
 import passport from 'passport';
-import "./src/config/local-strategy.js";
+import './src/config/local-strategy.js';
+
 
 // load environment variables
 import dotenv from 'dotenv';
@@ -40,36 +41,33 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     });
 
 
+app.set('view engine', 'ejs');          // embedded javascript (EJS) as view engine
+app.set('views', path.join(__dirname, 'src', 'views')); // Adjust the path as needed
 
-async function startServer() {
-    app.set('view engine', 'ejs');          // embedded javascript (EJS) as view engine
-    app.set('views', path.join(__dirname, 'src/pages'));
-    app.use(express.static(path.join(__dirname, 'public')));
-    // assign routes
-    app.set('trust proxy', 1) // trust first proxy
+// Static files
+app.use(express.static(path.join(__dirname, 'public')));
+// assign routes
+app.set('trust proxy', 1)               // trust first proxy
 
-    app.use(session({
-        secret: 'keyboard cat',
-        resave: false,
-        saveUninitialized: false,
-        store: store,
-        cookie: {
-            maxAge: 1000 * 60 * 60 * 24,
-        }
-    }))
+app.use(express.json());                // parse request body as json
 
-    // Session Setup
-    app.use(passport.initialize());
-    app.use(passport.session());
+// Session Setup
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+    }
+}))
+// Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
-    app.use(express.json());                // parse request body as json
+app.use(router);
 
-    app.use(router);
-
-    // Start Server
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
-    });
-}
-
-startServer();
+// Start Server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});

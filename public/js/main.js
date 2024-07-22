@@ -1,80 +1,84 @@
 
-const deleteBtn = document.querySelectorAll('.delete-btn');
-const form = document.querySelector('#task-form');
-const editBtn = document.querySelectorAll('.edit-btn');
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('The DOM is fully loaded and parsed');
 
-// Add Task
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formInputData = new FormData(form);
+    const deleteBtn = document.querySelectorAll('.delete-btn');
+    const form = document.querySelector('#task-form');
+    const editBtn = document.querySelectorAll('.edit-btn');
 
-    const data = {
-        task: formInputData.get('taskName'),
-        dueDate: formInputData.get('dueDate'),
-        prioritylevel: formInputData.get('priority-level'),
-        desc: formInputData.get('task-desc')
-    }
 
-    const response = await fetch('/addTask', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
+    // Add Task
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formInputData = new FormData(form);
 
-    if (response.status === 200) {
-        console.log('Task Added');
-        location.reload();
-    } else {
-        console.log('Task Not Added');
-    }
+        const data = {
+            task: formInputData.get('taskName'),
+            dueDate: formInputData.get('dueDate'),
+            prioritylevel: formInputData.get('priority-level'),
+            desc: formInputData.get('task-desc')
+        }
 
-});
-
-// Delete Task
-deleteBtn.forEach((btn) => {
-    btn.addEventListener('click', async (e) => {
-        let taskId = e.target.id;
-        console.log(taskId);
-        const response = await fetch(`/deleteTask/${taskId}`, {
-            method: 'DELETE'
+        const response = await fetch('/addTask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         });
 
         if (response.status === 200) {
-            console.log('Task Deleted');
+            console.log('Task Added');
             location.reload();
         } else {
-            console.log('Task Not Deleted');
+            console.log('Task Not Added');
         }
+
     });
-});
 
-// Update Task
-function formatDate(month, day, year) {
-    const formattedMonth = month <= 9 ? '0' + month : month;
-    const formattedDay = day <= 9 ? '0' + day : day;
-    return `${year}-${formattedMonth}-${formattedDay}`;
-}
+    // Delete Task
+    deleteBtn.forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+            let taskId = e.target.id;
+            console.log(taskId);
+            const response = await fetch(`/deleteTask/${taskId}`, {
+                method: 'DELETE'
+            });
 
-editBtn.forEach((btn) => {
-    btn.addEventListener('click', async (e) => {
-        let taskId = e.target.id;
+            if (response.status === 200) {
+                console.log('Task Deleted');
+                location.reload();
+            } else {
+                console.log('Task Not Deleted');
+            }
+        });
+    });
 
-        const prefill_data = await fetch(`/getTask/${taskId}`);
-        const taskData = await prefill_data.json();
-        const containertask = btn.parentNode.parentNode
+    // Update Task
+    function formatDate(month, day, year) {
+        const formattedMonth = month <= 9 ? '0' + month : month;
+        const formattedDay = day <= 9 ? '0' + day : day;
+        return `${year}-${formattedMonth}-${formattedDay}`;
+    }
 
-        const dueDate = new Date(taskData.dueDate);
-        const month = dueDate.getMonth() + 1;  // Add one since getMonth() returns 0-11
-        const day = dueDate.getDate();
-        const year = dueDate.getFullYear();
+    editBtn.forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+            let taskId = e.target.id;
 
-        // Format date as yyyy-mm-dd
-        const formattedDate = formatDate(month, day, year);
+            const prefill_data = await fetch(`/getTask/${taskId}`);
+            const taskData = await prefill_data.json();
+            const containertask = btn.parentNode.parentNode
 
-        const form =
-            `
+            const dueDate = new Date(taskData.dueDate);
+            const month = dueDate.getMonth() + 1;  // Add one since getMonth() returns 0-11
+            const day = dueDate.getDate();
+            const year = dueDate.getFullYear();
+
+            // Format date as yyyy-mm-dd
+            const formattedDate = formatDate(month, day, year);
+
+            const form =
+                `
         <form class="container" id="update-task-form-${taskData._id}">
             <div class="row gx-3 mb-2">
                 <div class="col">
@@ -105,26 +109,96 @@ editBtn.forEach((btn) => {
         </div>
         `
 
-        containertask.innerHTML = form;
+            containertask.innerHTML = form;
 
-        const updateForm = document.querySelector(`#update-task-form-${taskData._id}`);
-        const exitBtn = document.querySelector('.exit-update-btn');
+            const updateForm = document.querySelector(`#update-task-form-${taskData._id}`);
+            const exitBtn = document.querySelector('.exit-update-btn');
 
-        exitBtn.addEventListener('click', () => {
-            location.reload();
+            exitBtn.addEventListener('click', () => {
+                location.reload();
+            });
+
+            updateForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formInputData = new FormData(updateForm);
+                const data = {
+                    task: formInputData.get('taskName'),
+                    dueDate: formInputData.get('dueDate'),
+                    prioritylevel: formInputData.get('priority-level'),
+                    desc: formInputData.get('task-desc')
+                }
+
+                const response = await fetch(`/updateTask/${taskData._id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.status === 200) {
+                    console.log('Task Added');
+                    location.reload();
+                } else {
+                    console.log('Task Not Added');
+                }
+
+                console.log(data);
+            });
         });
+    });
 
-        updateForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formInputData = new FormData(updateForm);
+
+    // Changing Tab
+
+    const taskTodoTab = document.getElementById('task-todo');
+    const taskCompletedTab = document.getElementById('task-completed');
+    const toggleTodoTask = document.getElementById('todo-task-list');
+    const toggleCompletedTask = document.getElementById('task-completed-list');
+
+    taskTodoTab.addEventListener('click', () => {
+        // Hide completed
+        toggleCompletedTask.classList.remove('show');
+        toggleCompletedTask.classList.add('hide');
+
+        // Show todo
+        toggleTodoTask.classList.remove('hide');
+        toggleTodoTask.classList.add('show');
+
+        taskCompletedTab.classList.remove('active');
+        taskTodoTab.classList.add('active');
+
+        console.log("Toggle Todo");
+    });
+
+    taskCompletedTab.addEventListener('click', () => {
+        toggleTodoTask.classList.remove('show');
+        toggleTodoTask.classList.add('hide');
+
+        toggleCompletedTask.classList.remove('hide');
+        toggleCompletedTask.classList.add('show');
+
+        taskCompletedTab.classList.add('active');
+        taskTodoTab.classList.remove('active');
+
+        console.log("Toggle Completed");
+    });
+
+    // Add Task to Completed
+    const removeComplete = document.querySelectorAll('.remove-complete-btn');
+    const addComplete = document.querySelectorAll('.add-complete-btn');
+    const taskContainer = document.querySelectorAll('#task-completed-list');
+
+    removeComplete.forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+            let taskId = e.target.id;
+            console.log(taskId);
+
             const data = {
-                task: formInputData.get('taskName'),
-                dueDate: formInputData.get('dueDate'),
-                prioritylevel: formInputData.get('priority-level'),
-                desc: formInputData.get('task-desc')
+                status: "Incomplete"
             }
 
-            const response = await fetch(`/updateTask/${taskData._id}`, {
+            const response = await fetch(`/removeComplete/${taskId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -133,16 +207,40 @@ editBtn.forEach((btn) => {
             });
 
             if (response.status === 200) {
-                console.log('Task Added');
+                console.log('Task Incompleted');
                 location.reload();
             } else {
-                console.log('Task Not Added');
+                console.log('Task Not Incompleted');
             }
 
-            console.log(data);
-        });
+
+        })
     });
+
+    addComplete.forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+            let taskId = e.target.id;
+            console.log(taskId);
+
+            const data = {
+                status: "Complete"
+            }
+
+            const response = await fetch(`/addComplete/${taskId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.status === 200) {
+                console.log('Task Complete');
+                location.reload();
+            } else {
+                console.log('Task Not Completed');
+            }
+        })
+    });
+
 });
-
-
-

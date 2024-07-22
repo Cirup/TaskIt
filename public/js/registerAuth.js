@@ -2,7 +2,6 @@
 const registerForm = document.getElementById('register-form');
 
 registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
     const formData = new FormData(registerForm);
     const data = {
         username: formData.get('username'),

@@ -7,85 +7,36 @@ import Task from '../models/taskModel.js';
 import User from '../models/userModel.js';
 
 
-// Authetication Routes
-router.get('/login', (req, res) => {
-    res.render("login.ejs");
-});
+router.get('/', (req, res) => {
+    res.redirect('/home');
+})
 
+router.get('/homepage', (req, res) => {
+    res.redirect('/home');
+})
 
-router.post('/login', passport.authenticate('local', { successRedirect: '/user/auth', failureRedirect: '/register' }));
-
-// router.post('/login', (req, res, next) => {
-//     const data = req.body;
-//     console.log('Incoming Request:', data); // Log the request body
-// });
-
-// Test if there is user authenticated
-router.get('/user/auth', (req, res) => {
-    console.log(req.user);
-    console.log(req.session)
-    return req.user ? res.status(200).send(req.user) : res.status(401).send({ response: 'User Not Authenticated' });
-});
-
-router.get('/logout', (req, res) => {
-    res.render("../pages/main.ejs");
-});
-
-router.get('/register', (req, res) => {
-    try {
-        res.render("../pages/register.ejs");
-    } catch (error) {
-        console.log(error);
-    }
-});
-
-router.post('/register', (req, res) => {
-
-    try {
-        const data = req.body;
-        const userData = new User({
-            username: data.username,
-            password: data.password
-        });
-
-        const result = userData.save();
-
-        if (!result) {
-            console.log("User not registered");
-            res.status(501).send({ response: 'Error Registering User' });
-        } else {
-            console.log("User registered");
-            res.status(200).send({ response: 'User Registered' });
-        }
-    } catch (error) {
-        console.log(error);
-    }
-});
-
-
-router.get('/', async (req, res) => {
-
+router.get('/home', async (req, res, next) => {
     try {
         if (req.isAuthenticated()) {
+            console.log(req.session);
 
-            const task = await Task.find();
+            const username = req.session.passport.user;
+            console.log(username);
 
+            const task = await Task.find({ author: username }).exec();
             const dateFormat = task.map((item) => {
                 const date = new Date(item.dueDate);
-                const formattedDate = date.toLocaleDateString();
-                return formattedDate;
+                return date.toLocaleDateString();
             });
-
-            res.render("../pages/main", { data: task, displayDate: dateFormat, datalength: task.length });
+            res.render("../views/main.ejs", { data: task, displayDate: dateFormat, datalength: task.length });
         } else {
             console.log("No user found");
             res.status(404).send("User not found");
         }
     } catch (error) {
-        console.log(error);
+        res.status(500).send("Internal Server Error");
     }
 });
-
 
 router.get('/getTask/:id', async (req, res) => {
 
@@ -104,16 +55,41 @@ router.get('/getTask/:id', async (req, res) => {
     }
 });
 
+// router.get('/home', async (req, res) => {
+
+//     try {
+//         if (req.isAuthenticated()) {
+
+//             const task = await Task.find();
+
+//             const dateFormat = task.map((item) => {
+//                 const date = new Date(item.dueDate);
+//                 const formattedDate = date.toLocaleDateString();
+//                 return formattedDate;
+//             });
+
+//             res.render("../pages/main", { data: task, displayDate: dateFormat, datalength: task.length });
+//         } else {
+//             console.log("No user found");
+//             res.status(404).send("User not found");
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// });
+
+
 router.post('/addTask', async (req, res) => {
-    if (req.isAuthenticated()) {
-        try {
+    try {
+        if (req.isAuthenticated()) {
             const data = req.body;
             const taskData = new Task({
                 task: data.task,
                 dueDate: data.dueDate,
                 status: data.status,
                 prioritylevel: data.prioritylevel,
-                desc: data.desc
+                desc: data.desc,
+                author: req.session.passport.user
             });
 
             let formattedDate = new Date(data.dueDate);
@@ -128,12 +104,12 @@ router.post('/addTask', async (req, res) => {
                 console.log("Task added");
                 res.status(200).send({ response: 'Task Added' });
             }
-        } catch (error) {
-            console.log(error);
+        } else {
+            console.log("No user found");
+            res.status(404).send("User not found");
         }
-    }
-    else {
-        console.log("User not authenticated");
+    } catch (error) {
+        console.log(error);
     }
 });
 
@@ -152,20 +128,166 @@ router.delete('/deleteTask/:id', async (req, res) => {
 });
 
 router.patch('/updateTask/:id', async (req, res) => {
-    const id = req.params.id;
-    const data = req.body;
 
-    const result = await Task.findOneAndUpdate({ _id: id }, data); // or can use findByIdAndUpdate
+    try {
+        if (req.isAuthenticated()) {
+            const id = req.params.id;
+            const data = req.body;
 
-    if (result) {
-        console.log(`Task ${result.task} Updated`);
-        console.log(result)
-        res.status(200).send({ response: 'Task Updated' })
-    } else {
-        console.log("Task not updated");
-        res.status(501).send({ response: 'Error Updating' })
+            const result = await Task.findOneAndUpdate({ _id: id }, data); // or can use findByIdAndUpdate
+
+            if (result) {
+                console.log(`Task ${result.task} Updated`);
+                console.log(result)
+                res.status(200).send({ response: 'Task Updated' })
+            } else {
+                console.log("Task not updated");
+                res.status(501).send({ response: 'Error Updating' })
+            }
+        } else {
+            console.log("No user found");
+            res.status(404).send("User not found");
+        }
+    } catch (error) {
+        console.log(error);
     }
 
+});
+
+router.patch('/removeComplete/:id', async (req, res) => {
+    try {
+        if (req.isAuthenticated()) {
+            const id = req.params.id;
+            const data = req.body;
+            const result = await Task.findOneAndUpdate({ _id: id }, data);
+
+            if (result) {
+                console.log(`Task ${result.task} Incompleted`);
+                res.status(200).send({ response: 'Task Change to Incompleted' });
+            } else {
+                console.log("Task not updated");
+                res.status(501).send({ response: 'Error Updating' });
+            }
+        } else {
+            console.log("No user found");
+            res.status(404).send("User not found");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+router.patch('/addComplete/:id', async (req, res) => {
+    try {
+        if (req.isAuthenticated()) {
+            const id = req.params.id;
+            const data = req.body;
+            const result = await Task.findOneAndUpdate({ _id: id }, data);
+
+            if (result) {
+                console.log(`Task ${result.task} Incompleted`);
+                res.status(200).send({ response: 'Task Change to Completed' });
+            } else {
+                console.log("Task not updated");
+                res.status(501).send({ response: 'Error Updating' });
+            }
+        } else {
+            console.log("No user found");
+            res.status(404).send("User not found");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+
+// Authetication Routes
+router.get('/login', (req, res) => {
+    res.render("login.ejs");
+});
+
+router.post('/login', passport.authenticate('local', { successRedirect: '/home', failureMessage: true }));
+
+// router.post('/login', async (req, res, next) => {
+//     const { username, password } = req.body;
+//     console.log("Data Username " + username)
+//     console.log("Data Password " + password)
+
+//     const user = await User.findOne({ username: username }).exec();
+
+//     if (!user) {
+//         console.log("User not found");
+//         return res.status(404).send({ response: 'User not found' });
+//     }
+
+//     if (user.password !== password) {
+//         console.log("Password Incorrect");
+//         return res.status(401).send({ response: 'Password Incorrect' });
+//     }
+
+//     if (user) {
+//         console.log(user)
+//         res.redirect('/home');
+//     }
+// });
+
+router.get("/logout", async (req, res, next) => {
+    /*
+    *   Logout from passport and Destroy Session for security
+    */
+
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        req.session.destroy();
+        console.log("User logged out");
+        res.redirect("/login");
+    });
+
+});
+
+// Test if there is user authenticated
+router.get('/user/auth', (req, res) => {
+    if (req.isAuthenticated) {
+        console.log(req.user);
+        console.log(req.session)
+    }
+});
+
+
+router.get('/register', (req, res) => {
+    try {
+        res.render("../pages/register.ejs");
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.post('/register', async (req, res) => {
+
+    try {
+        const data = req.body;
+        const userData = new User({
+            username: data.username,
+            password: data.password
+        });
+
+        const result = await userData.save();
+
+
+        if (!result) {
+            console.log("User not registered");
+            res.status(501).send({ response: 'Error Registering User' });
+        } else {
+            console.log("User registered");
+            res.redirect('/login')
+        }
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 
