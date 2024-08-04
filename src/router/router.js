@@ -88,13 +88,13 @@ router.get("/logout", async (req, res, next) => {
 
 
 
-// router.get('/', (req, res) => {
-//     res.redirect('/home');
-// })
+router.get('/', (req, res) => {
+    res.redirect('/home');
+})
 
-// router.get('/homepage', (req, res) => {
-//     res.redirect('/home');
-// })
+router.get('/homepage', (req, res) => {
+    res.redirect('/home');
+})
 
 router.get('/home', async (req, res, next) => {
     try {
