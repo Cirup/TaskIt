@@ -7,6 +7,8 @@ Tech Stack :
 - BootStrap
 - MongoDB / Mongoose
 
+Deployed in Render : https://taskit-4iu3.onrender.com
+
 ChatGPT Client Simulation - requesting for a Task List Web App
 
 * User Authentication: Allow users to sign up, log in, and log out to access their own to-do lists securely.
