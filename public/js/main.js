@@ -118,7 +118,7 @@ function formHTML(data) {
             </div>
             <div class="row gx-3">
             <div class="col-10 task-desc">
-                <textarea "form-control task-description" name="task-desc" rows="1">${data.desc}</textarea>
+                <textarea class="form-control task-description" name="task-desc" rows="1">${data.desc}</textarea>
               </div>
             <button class="update-btn col-2 btn btn-primary" type="submit">Submit</button>
             </div>
