@@ -23,7 +23,7 @@ router.post('/register', async (req, res) => {
         const result = await new User({
             username: req.body.username,
             password: req.body.password,
-        }).save({ validateBeforeSave: true });
+        }).save();;
 
 
         if (!result) {
@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
             res.status(501).send({ response: 'Error Registering User' });
         } else {
             console.log("User registered");
-            res.status(200).redirect('/login')
+            res.status(200).json({ sucess: true, redirect: '/login' });
         }
     } catch (error) {
         console.log(error);
