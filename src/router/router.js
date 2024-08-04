@@ -204,7 +204,7 @@ router.get("/logout", async (req, res, next) => {
 
 router.get('/register', (req, res) => {
     try {
-        res.render("../pages/register.ejs");
+        res.render("../views/register.ejs");
     } catch (error) {
         console.log(error);
     }
