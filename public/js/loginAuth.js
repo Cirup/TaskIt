@@ -1,8 +1,51 @@
+// document.addEventListener('DOMContentLoaded', () => {
+//     const loginForm = document.getElementById('login-form');
+
+//     loginForm.addEventListener('submit', async (e) => {
+
+//         console.log('Logging In');
+
+//         const formData = new FormData(loginForm);
+//         const data = {
+//             username: formData.get('username'),
+//             password: formData.get('password')
+//         }
+
+
+//         console.log(data);
+
+//         try {
+//             const response = await fetch('/login', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 },
+//                 body: JSON.stringify(data),
+//             });
+
+//             if (response.ok) {
+//                 console.log('User Logged In');
+//                 window.location.href = '/home';
+//                 // Redirect or perform other actions after successful login
+//             } else {
+//                 console.log('User Not Logged In');
+//                 // Handle the error response
+//             }
+//         } catch (error) {
+//             console.error('Error:', error);
+//             alert('An error occurred. Please try again.');
+//         }
+//     });
+// });
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
+    let isSubmitting = false;
 
     loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();  // Prevent the default form submission
+        e.preventDefault();
+        if (isSubmitting) return;
+        isSubmitting = true;
 
         console.log('Logging In');
 
@@ -11,8 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
             username: formData.get('username'),
             password: formData.get('password')
         }
-
-        console.log(data);
 
         try {
             const response = await fetch('/login', {
@@ -23,19 +64,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(data),
             });
 
-            if (response.ok) {
+            const result = await response.json();
+
+            if (result.success) {
                 console.log('User Logged In');
-                // Redirect or perform other actions after successful login
-                window.location.href = '/home'; // Example of redirecting to home page
+                window.location.href = result.redirect;
             } else {
-                console.log('User Not Logged In');
-                // Handle the error response
-                const result = await response.json();
-                alert(result.response); // Display error message to the user
+                console.log('Login failed:', result.message);
+                // Handle the error, maybe show a message to the user
             }
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred. Please try again.');
+        } finally {
+            isSubmitting = false;
         }
     });
 });

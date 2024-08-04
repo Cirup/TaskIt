@@ -7,13 +7,94 @@ import Task from '../models/taskModel.js';
 import User from '../models/userModel.js';
 
 
-router.get('/', (req, res) => {
-    res.redirect('/home');
-})
+// Authetication Routes
 
-router.get('/homepage', (req, res) => {
-    res.redirect('/home');
-})
+router.get('/register', (req, res) => {
+    try {
+        res.render("../views/register.ejs");
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.post('/register', async (req, res) => {
+
+    try {
+        const result = await new User({
+            username: req.body.username,
+            password: req.body.password,
+        }).save({ validateBeforeSave: true });
+
+
+        if (!result) {
+            console.log("User not registered");
+            res.status(501).send({ response: 'Error Registering User' });
+        } else {
+            console.log("User registered");
+            res.status(200).redirect('/login')
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.get('/login', (req, res) => {
+    res.render("login.ejs");
+});
+
+// router.post('/login', passport.authenticate('local', { failureRedirect: '/register', successRedirect: '/' }));
+
+router.post('/login', (req, res, next) => {
+    console.log('Login attempt:', req.body);
+    passport.authenticate('local', (err, user, info) => {
+        console.log('Passport authenticate result:', { err, user: user ? user.username : null, info });
+        if (err) {
+            console.error('Error in passport.authenticate:', err);
+            return next(err);
+        }
+
+        if (!user) {
+            console.log('Authentication failed:', info.message);
+            return res.status(401).json({ success: false, message: info.message });
+        }
+
+        req.logIn(user, (err) => {
+            if (err) {
+                console.error('Error in req.logIn:', err);
+                return next(err);
+            }
+
+            console.log('User authenticated successfully:', user.username);
+            return res.json({ success: true, redirect: '/home' });
+        });
+    })(req, res, next);
+});
+
+router.get("/logout", async (req, res, next) => {
+    /*
+    *   Logout from passport and Destroy Session for security
+    */
+
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        req.session.destroy();
+        console.log("User logged out");
+        res.redirect("/login");
+    });
+
+});
+
+
+
+// router.get('/', (req, res) => {
+//     res.redirect('/home');
+// })
+
+// router.get('/homepage', (req, res) => {
+//     res.redirect('/home');
+// })
 
 router.get('/home', async (req, res, next) => {
     try {
@@ -176,63 +257,6 @@ router.patch('/addComplete/:id', async (req, res) => {
         console.log(error);
     }
 });
-
-
-
-// Authetication Routes
-
-router.get('/register', (req, res) => {
-    try {
-        res.render("../views/register.ejs");
-    } catch (error) {
-        console.log(error);
-    }
-});
-
-router.post('/register', async (req, res) => {
-
-    try {
-        const result = await new User({
-            username: req.body.username,
-            password: req.body.password,
-        }).save({ validateBeforeSave: true });
-
-
-        if (!result) {
-            console.log("User not registered");
-            res.status(501).send({ response: 'Error Registering User' });
-        } else {
-            console.log("User registered");
-            res.status(200).redirect('/login')
-        }
-    } catch (error) {
-        console.log(error);
-    }
-});
-
-router.get('/login', (req, res) => {
-    res.render("login.ejs");
-});
-
-router.post('/login', passport.authenticate('local', { successRedirect: '/home', failureMessage: true }));
-
-router.get("/logout", async (req, res, next) => {
-    /*
-    *   Logout from passport and Destroy Session for security
-    */
-
-    req.logout(function (err) {
-        if (err) {
-            return next(err);
-        }
-        req.session.destroy();
-        console.log("User logged out");
-        res.redirect("/login");
-    });
-
-});
-
-
 
 
 router.post('/searchTask', async (req, res) => {
