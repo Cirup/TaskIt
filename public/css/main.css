@@ -54,21 +54,22 @@ input[type="text"]:focus {
   background-color: #2e3033;
   color: #fff;
 }
+
 .form-control::placeholder {
   color: #abafb1;
 }
 
 .select-priority,
 option,
-#task-desc {
-  background-color: #2e3033;
-  color: #abafb1;
-  border-color: #fff;
-  border-radius: 0.42rem;
-  -webkit-border-radius: 0.42rem;
-  -moz-border-radius: 0.42rem;
-  -ms-border-radius: 0.42rem;
-  -o-border-radius: 0.42rem;
+.task-description {
+  background-color: #2e3033 !important;
+  color: #abafb1 !important;
+  border-color: #fff !important;
+  border-radius: 0.42rem !important;
+  -webkit-border-radius: 0.42rem !important;
+  -moz-border-radius: 0.42rem !important;
+  -ms-border-radius: 0.42rem !important;
+  -o-border-radius: 0.42rem !important;
 }
 
 label[for="priority-level"],

@@ -44,7 +44,7 @@
                         <div class="d-flex align-items-center">
                             <select id="sorting-select" class="col-3 select-priority py-2 px-1 me-2"
                                 name="priority-level" aria-label="priority selection">
-                                <option selected>Sort by</option>
+                                <option selected hidden>Sort by</option>
                                 <option value="Title">Title</option>
                                 <option value="Date">Due Date</option>
                                 <option value="Priority">Priority Level</option>
@@ -58,7 +58,7 @@
                         <% for(var i=0; i< datalength; i++) { if(data[i].status==="Incomplete" ) { %>
 
                             <div
-                                class="task-container d-flex justify-content-between align-items-center px-4 py-4 mb-3">
+                                class="task-container uncompleted-task d-flex justify-content-between align-items-center px-4 py-4 mb-3">
                                 <div class="d-flex flex-column justify-content-center">
                                     <h2 class="task-title">
                                         <%= data[i].task %>
@@ -116,7 +116,7 @@
                     <section id="task-completed-list" class="hide">
                         <% for(var i=0; i< datalength; i++) { if(data[i].status==="Complete" ){%>
                             <div
-                                class="task-container d-flex justify-content-between align-items-center px-4 py-4 mb-3">
+                                class="task-container completed-task d-flex justify-content-between align-items-center px-4 py-4 mb-3">
                                 <div class="d-flex flex-column justify-content-center">
                                     <h2 class="task-title">
                                         <%= data[i].task %>

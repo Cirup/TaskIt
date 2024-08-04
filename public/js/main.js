@@ -1,7 +1,14 @@
+// Update Task
+function formatDate(month, day, year) {
+    const formattedMonth = month <= 9 ? '0' + month : month;
+    const formattedDay = day <= 9 ? '0' + day : day;
+    return `${year}-${formattedMonth}-${formattedDay}`;
+}
+
 
 function taskListHTML(data) {
     data.dueDate = new Date(data.dueDate).toLocaleDateString()
-    return ` <div class="task-container d-flex justify-content-between align-items-center px-4 py-4 mb-3">
+    return ` <div class="task-container  uncompleted-task  d-flex justify-content-between align-items-center px-4 py-4 mb-3">
                 <div class="d-flex flex-column justify-content-center">
                     <h2 class="task-title">
                         ${data.task}
@@ -59,7 +66,7 @@ function taskListHTML(data) {
 function completedTaskList(data) {
 
     return `
-            <div class="task-container d-flex justify-content-between align-items-center px-4 py-4 mb-3">
+            <div class="task-container completed-task d-flex justify-content-between align-items-center px-4 py-4 mb-3">
                 <div class="d-flex flex-column justify-content-center">
                     <h2 class="task-title">
                         ${data.task}
@@ -81,6 +88,48 @@ function completedTaskList(data) {
                 </div>
             </div>
         `
+}
+
+function formHTML(data) {
+    const newDate = new Date(data.dueDate)
+
+    const month = newDate.getMonth() + 1;  // Add one since getMonth() returns 0-11
+    const day = newDate.getDate();
+    const year = newDate.getFullYear();
+
+    // Format date as yyyy-mm-dd
+    const formattedDate = formatDate(month, day, year);
+
+    return `
+        <form class="container" id="update-task-form-${data._id}">
+            <div class="row gx-3 mb-2">
+                <div class="col">
+                    <input type="text" class="form-control py-2 px-2" name="taskName" id="update-taskName" value="${data.task}" >
+                </div>
+                <div class="col">
+                    <input type="date" class="form-control py-2 px-2" name="dueDate" id="update-dueDate" value="${formattedDate}">
+                </div>
+                <select class="col select-priority py-2" name="priority-level" aria-label="priority selection">
+                        <option selected >Priority</option>
+                        <option ${data.prioritylevel === 'High' ? 'selected' : ''} value="High">High</option>
+                        <option  ${data.prioritylevel === 'Medium' ? 'selected' : ''}  value="Medium">Medium</option>
+                        <option  ${data.prioritylevel === 'Low' ? 'selected' : ''}  value="Low">Low</option>
+                </select>
+            </div>
+            <div class="row gx-3">
+            <div class="col-10 task-desc">
+                <textarea "form-control task-description" name="task-desc" rows="1">${data.desc}</textarea>
+              </div>
+            <button class="update-btn col-2 btn btn-primary" type="submit">Submit</button>
+            </div>
+         </form>
+         <div id="<%= ${data._id}  %>" class="icons exit-update-btn d-flex justify-content-center align-items-center ms-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#ffffff" fill="none">
+            <path d="M15.7494 15L9.75 9M9.75064 15L15.75 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M22.75 12C22.75 6.47715 18.2728 2 12.75 2C7.22715 2 2.75 6.47715 2.75 12C2.75 17.5228 7.22715 22 12.75 22C18.2728 22 22.75 17.5228 22.75 12Z" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+        </div>
+    `
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -136,13 +185,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Update Task
-    function formatDate(month, day, year) {
-        const formattedMonth = month <= 9 ? '0' + month : month;
-        const formattedDay = day <= 9 ? '0' + day : day;
-        return `${year}-${formattedMonth}-${formattedDay}`;
-    }
-
 
     editBtn.forEach((btn) => {
         btn.addEventListener('click', async (e) => {
@@ -179,7 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
             <div class="row gx-3">
             <div class="col-10 task-desc">
-                <textarea class="form-control" name="task-desc" rows="1">${taskData.desc}</textarea>
+                <textarea class="form-control task-description" name="task-desc" rows="1">${taskData.desc}</textarea>
               </div>
             <button class="update-btn col-2 btn btn-primary" type="submit">Submit</button>
             </div>
@@ -310,45 +352,45 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const taskData = await prefill_data.json();
                 const containertask = btn.parentNode.parentNode
 
-                const dueDate = new Date(taskData.dueDate);
-                const month = dueDate.getMonth() + 1;  // Add one since getMonth() returns 0-11
-                const day = dueDate.getDate();
-                const year = dueDate.getFullYear();
+                // const dueDate = new Date(taskData.dueDate);
+                // const month = dueDate.getMonth() + 1;  // Add one since getMonth() returns 0-11
+                // const day = dueDate.getDate();
+                // const year = dueDate.getFullYear();
 
-                // Format date as yyyy-mm-dd
-                const formattedDate = formatDate(month, day, year);
+                // // Format date as yyyy-mm-dd
+                // const formattedDate = formatDate(month, day, year);
 
-                const form =
-                    `
-                    <form class="container" id="update-task-form-${taskData._id}">
-                        <div class="row gx-3 mb-2">
-                            <div class="col">
-                                <input type="text" class="form-control py-2 px-2" name="taskName" id="update-taskName" value="${taskData.task}" >
-                            </div>
-                            <div class="col">
-                                <input type="date" class="form-control py-2 px-2" name="dueDate" id="update-dueDate" value="${formattedDate}">
-                            </div>
-                            <select class="col select-priority py-2" name="priority-level" aria-label="priority selection">
-                                    <option selected >Priority</option>
-                                    <option ${taskData.prioritylevel === 'High' ? 'selected' : ''} value="High">High</option>
-                                    <option  ${taskData.prioritylevel === 'Medium' ? 'selected' : ''}  value="Medium">Medium</option>
-                                    <option  ${taskData.prioritylevel === 'Low' ? 'selected' : ''}  value="Low">Low</option>
-                            </select>
-                        </div>
-                        <div class="row gx-3">
-                        <div class="col-10 task-desc">
-                            <textarea class="form-control" name="task-desc" rows="1">${taskData.desc}</textarea>
-                        </div>
-                        <button class="update-btn col-2 btn btn-primary" type="submit">Submit</button>
-                        </div>
-                    </form>
-                    <div id="<%= ${taskData._id}  %>" class="icons exit-update-btn d-flex justify-content-center align-items-center ms-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#ffffff" fill="none">
-                        <path d="M15.7494 15L9.75 9M9.75064 15L15.75 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M22.75 12C22.75 6.47715 18.2728 2 12.75 2C7.22715 2 2.75 6.47715 2.75 12C2.75 17.5228 7.22715 22 12.75 22C18.2728 22 22.75 17.5228 22.75 12Z" stroke="currentColor" stroke-width="1.5" />
-                        </svg>
-                    </div>
-        `
+                const form = formHTML(taskData);;
+                //             `
+                //             <form class="container" id="update-task-form-${taskData._id}">
+                //                 <div class="row gx-3 mb-2">
+                //                     <div class="col">
+                //                         <input type="text" class="form-control py-2 px-2" name="taskName" id="update-taskName" value="${taskData.task}" >
+                //                     </div>
+                //                     <div class="col">
+                //                         <input type="date" class="form-control py-2 px-2" name="dueDate" id="update-dueDate" value="${formattedDate}">
+                //                     </div>
+                //                     <select class="col select-priority py-2" name="priority-level" aria-label="priority selection">
+                //                             <option selected >Priority</option>
+                //                             <option ${taskData.prioritylevel === 'High' ? 'selected' : ''} value="High">High</option>
+                //                             <option  ${taskData.prioritylevel === 'Medium' ? 'selected' : ''}  value="Medium">Medium</option>
+                //                             <option  ${taskData.prioritylevel === 'Low' ? 'selected' : ''}  value="Low">Low</option>
+                //                     </select>
+                //                 </div>
+                //                 <div class="row gx-3">
+                //                 <div class="col-10 task-desc">
+                //                     <textarea class="form-control" name="task-desc" rows="1">${taskData.desc}</textarea>
+                //                 </div>
+                //                 <button class="update-btn col-2 btn btn-primary" type="submit">Submit</button>
+                //                 </div>
+                //             </form>
+                //             <div id="<%= ${taskData._id}  %>" class="icons exit-update-btn d-flex justify-content-center align-items-center ms-2">
+                //                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#ffffff" fill="none">
+                //                 <path d="M15.7494 15L9.75 9M9.75064 15L15.75 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                //                 <path d="M22.75 12C22.75 6.47715 18.2728 2 12.75 2C7.22715 2 2.75 6.47715 2.75 12C2.75 17.5228 7.22715 22 12.75 22C18.2728 22 22.75 17.5228 22.75 12Z" stroke="currentColor" stroke-width="1.5" />
+                //                 </svg>
+                //             </div>
+                // `
 
                 containertask.innerHTML = form;
 
@@ -473,7 +515,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     removeComplete.forEach((btn) => {
         btn.addEventListener('click', async (e) => {
             let taskId = e.target.id;
-            console.log(taskId);
 
             const data = {
                 status: "Incomplete"
@@ -534,13 +575,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Remove in Uncompleted Container
                 const task = btn.parentElement.parentElement;
 
-                console.log(task)
                 toggleTodoTask.removeChild(task);
 
-
-
                 const taskCompleted = completedTaskList(responseJson);
-
 
                 //Put in Completed Container
                 toggleCompletedTask.insertAdjacentHTML('beforeend', taskCompleted);
@@ -586,14 +623,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 data.dueDate = new Date(data.dueDate).toLocaleDateString();
 
                 const html = `
-                    ${data.map((filteredTask) => taskListHTML(filteredTask))}
+                    ${data.map((filteredTask) => taskListHTML(filteredTask)).join('')}
                 `;
 
                 // console.log(html)
                 taskList.innerHTML = html
                 bindEventListeners();
 
-                console.log(`Searching ${input}`)
+                // console.log(`Searching ${input}`)
             } else {
                 console.error('Error fetching search results:', response.statusText);
             }
@@ -614,7 +651,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     sortSelector.addEventListener('change', async (e) => {
         const selectedValue = e.target.value;
-        const allPost = document.querySelectorAll('.task-container');
+        const allPost = document.querySelectorAll('.uncompleted-task');
         const taskList = document.getElementById('todo-task-list');
         const taskDetails = []
         let sortedTasks = [];
@@ -669,13 +706,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             case 'Priority':
                 sortedTasks = sortByPriority(taskDetails);
                 break;
+            default: sortedTasks = allPost;
         }
 
-        console.log(sortedTasks)
-
         const sortedHTML = sortedTasks.map((task) => task.container.outerHTML).join('')
-
-        console.log(sortedHTML)
 
         taskList.innerHTML = sortedHTML;
         bindEventListeners();
