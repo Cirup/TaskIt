@@ -180,6 +180,36 @@ router.patch('/addComplete/:id', async (req, res) => {
 
 
 // Authetication Routes
+
+router.get('/register', (req, res) => {
+    try {
+        res.render("../views/register.ejs");
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.post('/register', async (req, res) => {
+
+    try {
+        const result = await new User({
+            username: req.body.username,
+            password: req.body.password,
+        }).save({ validateBeforeSave: true });
+
+
+        if (!result) {
+            console.log("User not registered");
+            res.status(501).send({ response: 'Error Registering User' });
+        } else {
+            console.log("User registered");
+            res.status(200).redirect('/login')
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 router.get('/login', (req, res) => {
     res.render("login.ejs");
 });
@@ -202,37 +232,7 @@ router.get("/logout", async (req, res, next) => {
 
 });
 
-router.get('/register', (req, res) => {
-    try {
-        res.render("../views/register.ejs");
-    } catch (error) {
-        console.log(error);
-    }
-});
 
-router.post('/register', async (req, res) => {
-
-    try {
-        const data = req.body;
-        const userData = new User({
-            username: data.username,
-            password: data.password
-        });
-
-        const result = await userData.save();
-
-
-        if (!result) {
-            console.log("User not registered");
-            res.status(501).send({ response: 'Error Registering User' });
-        } else {
-            console.log("User registered");
-            res.redirect('/login')
-        }
-    } catch (error) {
-        console.log(error);
-    }
-});
 
 
 router.post('/searchTask', async (req, res) => {
