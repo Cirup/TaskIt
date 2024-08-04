@@ -28,7 +28,7 @@ const MongoDBStore = connectMongoDBSession(session);
 mongoose.connect(mongoURI).then(() => console.log("Session connected to MongoDB!"));
 
 const store = new MongoDBStore({
-    uri: 'mongodb://127.0.0.1:27017/TaskIt',
+    uri: mongoURI,
     collection: 'mySessions'
 });
 
