@@ -30,7 +30,7 @@ router.get('/home', async (req, res, next) => {
             res.render("../views/main.ejs", { data: task, displayDate: dateFormat, datalength: task.length, name: user.username });
         } else {
             console.log("No user found");
-            res.status(404).send("User not found");
+            res.redirect('/login');
         }
     } catch (error) {
         res.status(500).send("Internal Server Error");
