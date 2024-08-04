@@ -18,17 +18,16 @@ router.get('/homepage', (req, res) => {
 router.get('/home', async (req, res, next) => {
     try {
         if (req.isAuthenticated()) {
-            console.log(req.session);
 
             const username = req.session.passport.user;
-            console.log(username);
-
+            const user = await User.findById(username).exec();
             const task = await Task.find({ author: username }).exec();
+
             const dateFormat = task.map((item) => {
                 const date = new Date(item.dueDate);
                 return date.toLocaleDateString();
             });
-            res.render("../views/main.ejs", { data: task, displayDate: dateFormat, datalength: task.length });
+            res.render("../views/main.ejs", { data: task, displayDate: dateFormat, datalength: task.length, name: user.username });
         } else {
             console.log("No user found");
             res.status(404).send("User not found");
@@ -54,29 +53,6 @@ router.get('/getTask/:id', async (req, res) => {
         console.log(err);
     }
 });
-
-// router.get('/home', async (req, res) => {
-
-//     try {
-//         if (req.isAuthenticated()) {
-
-//             const task = await Task.find();
-
-//             const dateFormat = task.map((item) => {
-//                 const date = new Date(item.dueDate);
-//                 const formattedDate = date.toLocaleDateString();
-//                 return formattedDate;
-//             });
-
-//             res.render("../pages/main", { data: task, displayDate: dateFormat, datalength: task.length });
-//         } else {
-//             console.log("No user found");
-//             res.status(404).send("User not found");
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// });
 
 
 router.post('/addTask', async (req, res) => {
@@ -163,7 +139,7 @@ router.patch('/removeComplete/:id', async (req, res) => {
 
             if (result) {
                 console.log(`Task ${result.task} Incompleted`);
-                res.status(200).send({ response: 'Task Change to Incompleted' });
+                res.status(200).json(result);
             } else {
                 console.log("Task not updated");
                 res.status(501).send({ response: 'Error Updating' });
@@ -187,7 +163,7 @@ router.patch('/addComplete/:id', async (req, res) => {
 
             if (result) {
                 console.log(`Task ${result.task} Incompleted`);
-                res.status(200).send({ response: 'Task Change to Completed' });
+                res.status(200).json(result);
             } else {
                 console.log("Task not updated");
                 res.status(501).send({ response: 'Error Updating' });
@@ -210,29 +186,6 @@ router.get('/login', (req, res) => {
 
 router.post('/login', passport.authenticate('local', { successRedirect: '/home', failureMessage: true }));
 
-// router.post('/login', async (req, res, next) => {
-//     const { username, password } = req.body;
-//     console.log("Data Username " + username)
-//     console.log("Data Password " + password)
-
-//     const user = await User.findOne({ username: username }).exec();
-
-//     if (!user) {
-//         console.log("User not found");
-//         return res.status(404).send({ response: 'User not found' });
-//     }
-
-//     if (user.password !== password) {
-//         console.log("Password Incorrect");
-//         return res.status(401).send({ response: 'Password Incorrect' });
-//     }
-
-//     if (user) {
-//         console.log(user)
-//         res.redirect('/home');
-//     }
-// });
-
 router.get("/logout", async (req, res, next) => {
     /*
     *   Logout from passport and Destroy Session for security
@@ -248,15 +201,6 @@ router.get("/logout", async (req, res, next) => {
     });
 
 });
-
-// Test if there is user authenticated
-router.get('/user/auth', (req, res) => {
-    if (req.isAuthenticated) {
-        console.log(req.user);
-        console.log(req.session)
-    }
-});
-
 
 router.get('/register', (req, res) => {
     try {
@@ -290,5 +234,104 @@ router.post('/register', async (req, res) => {
     }
 });
 
+
+router.post('/searchTask', async (req, res) => {
+
+    try {
+        if (req.isAuthenticated()) {
+            const data = req.body;
+            console.log(data.searchValue)
+
+            const task = await Task.find({ author: req.session.passport.user, task: { $regex: data.searchValue, $options: 'i' } });
+
+            if (task) {
+                res.status(200).json(task);
+            } else {
+                console.log('No Task Found')
+            }
+
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+
+// Test if there is user authenticated
+// router.get('/user/auth', (req, res) => {
+//     if (req.isAuthenticated) {
+//         console.log(req.user);
+//         console.log(req.session)
+//     }
+// });
+
+
+// router.get('/home', async (req, res) => {
+
+//     try {
+//         if (req.isAuthenticated()) {
+
+//             const task = await Task.find();
+
+//             const dateFormat = task.map((item) => {
+//                 const date = new Date(item.dueDate);
+//                 const formattedDate = date.toLocaleDateString();
+//                 return formattedDate;
+//             });
+
+//             res.render("../pages/main", { data: task, displayDate: dateFormat, datalength: task.length });
+//         } else {
+//             console.log("No user found");
+//             res.status(404).send("User not found");
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// });
+
+
+// router.post('/login', async (req, res, next) => {
+//     const { username, password } = req.body;
+//     console.log("Data Username " + username)
+//     console.log("Data Password " + password)
+
+//     const user = await User.findOne({ username: username }).exec();
+
+//     if (!user) {
+//         console.log("User not found");
+//         return res.status(404).send({ response: 'User not found' });
+//     }
+
+//     if (user.password !== password) {
+//         console.log("Password Incorrect");
+//         return res.status(401).send({ response: 'Password Incorrect' });
+//     }
+
+//     if (user) {
+//         console.log(user)
+//         res.redirect('/home');
+//     }
+// });
+
+
+
+// router.get('searchTask', async(req,res)=>{
+//     try {
+//         if (req.isAuthenticated()) {
+//             const task = req.body;
+
+//             const dateFormat = task.map((item) => {
+//                 const date = new Date(item.dueDate);
+//                 return date.toLocaleDateString();
+//             });
+//             res.render("../views/main.ejs", { data: task, displayDate: dateFormat, datalength: task.length });
+//         } else {
+//             console.log("No user found");
+//             res.status(404).send("User not found");
+//         }
+//     } catch (error) {
+//         res.status(500).send("Internal Server Error");
+//     }
+// })
 
 export default router;

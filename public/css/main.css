@@ -9,6 +9,10 @@ body {
   background-color: #1a1b1e;
 }
 
+main {
+  min-width: 650px;
+}
+
 .container-lg {
   padding: 0 200px;
 }
@@ -41,10 +45,14 @@ input[type="date"] {
   -o-border-radius: 0.42rem;
 }
 
-input[type="text"],
-input[type="text"]:active {
+input[type="text"] {
   background-color: #2e3033;
   color: #abafb1;
+}
+
+input[type="text"]:focus {
+  background-color: #2e3033;
+  color: #fff;
 }
 .form-control::placeholder {
   color: #abafb1;
@@ -70,7 +78,7 @@ label[for="task-desc"] {
 
 h2 {
   font-size: 24px;
-  color: #fff;
+  color: #8b8b8b;
   font-weight: 700;
 }
 
@@ -115,6 +123,9 @@ h2 {
 /* PRIORITY */
 
 .High-priority {
+  width: 160px;
+  text-align: center;
+  display: inline-block;
   font-weight: 600;
   background-color: #ffe0e0;
   border-radius: 5px;
@@ -129,6 +140,8 @@ h2 {
 }
 
 .Medium-priority {
+  width: 160px;
+  text-align: center;
   display: inline-block;
   font-weight: 600;
   background-color: #fde5c0;
@@ -144,6 +157,8 @@ h2 {
 }
 
 .Low-priority {
+  width: 160px;
+  text-align: center;
   display: inline-block;
   font-weight: 600;
   background-color: #cdf3c6;
@@ -185,8 +200,9 @@ h2 {
 }
 
 .active {
-  text-decoration: underline;
-  text-underline-offset: 10px;
+  color: #fff;
+  /* text-decoration: underline;
+  text-underline-offset: 10px; */
 }
 
 .hide {
